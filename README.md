@@ -15,7 +15,7 @@
 ## 📦 依赖要求
 
 ### 必需依赖
-- **Minecraft**: 1.20+
+- **Minecraft**: 1.21.x
 - **Java**: 21
 - **Paper/Spigot**: 最新版本(目前不支持Leaf) [#Issues](https://github.com/ian171/AuthAnvilLogin/issues/9)
 - **AuthMe**: 5.6.1+
@@ -37,4 +37,5 @@
 [⬆ 回到顶部](#authanvillogin)
 
 </div>
+
 
