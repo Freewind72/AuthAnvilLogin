@@ -9,6 +9,7 @@ import net.chen.ll.authAnvilLogin.gui.BedrockGui;
 import net.chen.ll.authAnvilLogin.util.*;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,6 +17,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 
@@ -82,7 +84,7 @@ public class Handler implements Listener {
         }
 
         if(isLeaf()){
-            logger.warning("您似乎在不支持的客户端运行该插件,不保证可用性");
+            logger.warning("该插件为延续新版前置登录插件二次开发，不保证稳定性");
         }
 
         // 处理基岩版玩家
@@ -255,29 +257,30 @@ public class Handler implements Listener {
         try {
             new AnvilGUI.Builder()
                     .title(ConfigUtil.getMessage("login-title"))
-                    .text("")
-                    .itemLeft(ItemName.setItemName(AnvilSlot.LOGIN_LEFT, ConfigUtil.getMessage("login-button")))
-                    .itemRight(ItemName.setItemName(AnvilSlot.LOGIN_RIGHT, ConfigUtil.getMessage("reg-button")))
+                    .text("") // 第一个框保持空白（密码输入）
+                    .itemLeft(createBlankItem()) // 第一个框左侧：空白物品
+                    .itemRight(createBlankItem()) // 第一个框右侧：空白物品
                     .plugin(AuthAnvilLogin.getPlugin(AuthAnvilLogin.class))// 插件实例
                     .onClickAsync((slot, stateSnapshot) -> {
                         if(slot == AnvilGUI.Slot.INPUT_LEFT){
-                            player.sendMessage("Help: "+ link);
-                            player.sendMessage("you can use \"/al login\" to re-open the Gui");
+                            // 左侧输入框点击：无操作
                         }
                         if (slot == AnvilGUI.Slot.OUTPUT){
+                            // 输出框点击：执行登录
                             String input = stateSnapshot.getText();// 获取玩家输入的文本
                             handleLogin(player, input);
                         }
                         if (slot == AnvilGUI.Slot.INPUT_RIGHT) {
+                            // 右侧输入框点击：切换到注册界面
                             openRegisterUI(player);
                         }
                         // 处理点击事件
                         return CompletableFuture.completedFuture(Arrays.asList(AnvilGUI.ResponseAction.run(() -> {
                             // 完成时执行的代码
-                            logger.info(player.getName() + " Done");
+                            logger.info(player.getName() + " 点击了登录界面");
                         })));
                     })
-                    .itemOutput(ItemName.setItemName(AnvilSlot.LOGIN_OUT, ConfigUtil.getMessage("login-button"))) // 设置输出物品
+                    .itemOutput(ItemName.setItemName(AnvilSlot.LOGIN_OUT, ConfigUtil.getMessage("login-button"))) // 第三个框：登录确认按钮
                     .open(player);
         } catch (Exception e) {
             logger.severe("无法打开登录界面: " + e.getMessage());
@@ -378,34 +381,42 @@ public class Handler implements Listener {
     public void openRegisterUI(Player player) {
         player.closeInventory();
         try {
-//            ItemStack reg_confirm = new ItemStack(getItemsListMap().get(AnvilSlot.REGISTER_LEFT));
-//            if (enableAgreement) {
-//                ItemMeta meta = reg_confirm.getItemMeta();
-//                meta.lore((List<? extends Component>) List.of(agreements));
-//                reg_confirm.setLore(agreements);
-//            }
             new AnvilGUI.Builder()
                     .title(ConfigUtil.getMessage("reg-title"))
-                    .text("")
-                    .itemOutput(ItemName.setLore(ItemName.setItemName(AnvilSlot.REGISTER_LEFT, ConfigUtil.getMessage("reg-button")), String.valueOf(agreements)))
+                    .text("") // 第一个框保持空白（密码输入）
+                    .itemLeft(createBlankItem()) // 第一个框左侧：空白物品
+                    .itemRight(createBlankItem()) // 第一个框右侧：空白物品
                     .plugin(AuthAnvilLogin.instance)
-                    .itemLeft(ItemName.setItemName(AnvilSlot.REGISTER_RIGHT, ConfigUtil.getMessage("reg-button")))
-                    .itemRight(ItemName.setItemName(AnvilSlot.REGISTER_OUT, ConfigUtil.getMessage("reg-button")))
                     .onClickAsync((slot, stateSnapshot) -> {
+                        if (slot == AnvilGUI.Slot.INPUT_LEFT){
+                            // 左侧输入框点击：返回登录界面
+                            openLoginUI(player);
+                        }
                         if (slot == AnvilGUI.Slot.OUTPUT) {
+                            // 输出框点击：执行注册
                             if(isUsedPasswdGen){
-                                player.sendMessage(new PasswordGen().getPasswordAsString());
+                                player.sendMessage("§a生成的密码: " + new PasswordGen().getPasswordAsString());
                                 return CompletableFuture.completedFuture(List.of(AnvilGUI.ResponseAction.run(() -> {
                                 })));
                             }
                             String input = stateSnapshot.getText();
                             handleRegistry(player, input);
                         }
+                        if (slot == AnvilGUI.Slot.INPUT_RIGHT) {
+                            // 右侧输入框点击：立即生成密码
+                            if(isUsedPasswdGen){
+                                player.sendMessage("§a点击输出框获取生成的密码");
+                            } else {
+                                player.sendMessage("§c密码生成功能未启用");
+                            }
+                        }
                         return CompletableFuture.completedFuture(List.of(AnvilGUI.ResponseAction.run(() -> {
-
+                            logger.info(player.getName() + " 点击了注册界面");
                         })));
 
-                    }).open(player);
+                    })
+                    .itemOutput(ItemName.setItemName(AnvilSlot.REGISTER_OUT, ConfigUtil.getMessage("reg-button"))) // 第三个框：注册确认按钮
+                    .open(player);
         } catch (Exception e) {
             logger.severe("无法打开注册界面: " + e.getMessage());
             if (isDebug) {
@@ -477,6 +488,24 @@ public class Handler implements Listener {
             }
         });
     }
+    /**
+     * 创建空白物品（用于清空AnvilGUI的输入框）
+     */
+    /**
+     * 创建空白物品（用于清空AnvilGUI的输入框）
+     * 使用透明字符作为显示名称，使物品在视觉上几乎不可见
+     */
+    private static ItemStack createBlankItem() {
+        ItemStack blankItem = new ItemStack(Material.PAPER);
+        org.bukkit.inventory.meta.ItemMeta meta = blankItem.getItemMeta();
+        if (meta != null) {
+            // 使用透明字符而不是普通空格，确保更好的隐藏效果
+            meta.setDisplayName("§f§r"); // 透明字符
+            blankItem.setItemMeta(meta);
+        }
+        return blankItem;
+    }
+    
     public static boolean isContainUpper(String str) {
         return str.chars().anyMatch(Character::isUpperCase);
     }

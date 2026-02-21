@@ -1,77 +1,153 @@
+# 配置文件版本号
 ver: 1
+
+# 安全设置
 # 最大登录尝试次数
 max-attempts: 3
+
 # 锁定时长（秒），默认300秒=5分钟
 lockout-duration: 300
+
+# 调试模式，开启后会输出更多日志信息
 debug: false
 
 # Web 管理面板配置
 web:
-  enabled: true        # 是否启用 Web 管理面板
-  port: 8080          # Web 服务器端口
-  token: ""           # 访问令牌（留空自动生成）
+  # 是否启用 Web 管理面板
+  enabled: true
+  
+  # Web 服务器端口
+  port: 8080
+  
+  # 访问令牌（留空自动生成）
+  token: ""
 
+# 插件基本配置
 config:
+  # 插件前缀
   prefix: AuthAnvilLogin
+  
+  # 是否要求密码包含大写字母
   isRequestUpper: true
+  
+  # 是否检查密码最小长度
   checkLowestPassword: true
+  
+  # 是否检查密码最大长度
   checkLongestPassword: true
+  
+  # 是否启用用户协议
   enableAgreement: true
+  
+  # 延迟时间（ticks）
   delay-time: 45L
+  
+  # 关闭窗口时是否踢出玩家
   close-kick: true
+  
+  # 是否启用密码生成功能
   usePasswdGen: false
+
+# 物品材料配置
 materials:
+  # 登录界面物品配置
   login:
+    # 左侧输入框物品
     left: "PAPER"
+    
+    # 右侧输入框物品
     right: "REDSTONE"
+    
+    # 输出框物品
     output: "ARROW"
+  
+  # 注册界面物品配置
   register:
+    # 左侧输入框物品
     left: "DIAMOND"
+    
+    # 右侧输入框物品
     right: "IRON_INGOT"
+    
+    # 输出框物品
     output: "ARROW"
+
+# 消息文本配置
 messages:
+  # 帮助链接
   link: "www.bing.com"
-  # Login window
-  login-title: "Login"
-  login-button: "Login"
-  login-password-title: "Password"
-  login-password-placeholder: "Please enter your password"
-  wrong-password: "&cIncorrect password, please try again"
-  # Registration window
-  reg-title: "Register"
-  reg-button: "Register Now"
-  reg-password-title: "Password"
-  reg-password-placeholder: "Please enter your password"
-  reg-confirmPassword-title: "Confirm Password"
-  reg-confirmPassword-placeholder: "Please enter your password again"
-  passwords-not-match: "&cPasswords do not match, please try again"
-  password-empty: "&cPassword cannot be empty, please try again"
-  # General prompts
-  close-window: "&cWindow closed, login/registration terminated"
-  #Failed
-  failed: "Failed to open"
+  
+  # 登录窗口配置
+  # 登录窗口标题
+  login-title: "&a用户登录"
+  
+  # 登录按钮文本
+  login-button: "&a&l确认登录"
+  
+  # 登录密码输入框标题
+  login-password-title: "密码"
+  
+  # 登录密码输入框占位符
+  login-password-placeholder: "请输入您的密码"
+  
+  # 密码错误提示
+  wrong-password: "&c密码错误，请重试"
+  
+  # 注册窗口配置
+  # 注册窗口标题
+  reg-title: "&b用户注册"
+  
+  # 注册按钮文本
+  reg-button: "&b&l确认注册"
+  
+  # 注册密码输入框标题
+  reg-password-title: "密码"
+  
+  # 注册密码输入框占位符
+  reg-password-placeholder: "请输入您的密码"
+  
+  # 确认密码输入框标题
+  reg-confirmPassword-title: "确认密码"
+  
+  # 确认密码输入框占位符
+  reg-confirmPassword-placeholder: "请再次输入密码"
+  
+  # 密码不匹配提示
+  passwords-not-match: "&c两次输入的密码不一致，请重试"
+  
+  # 密码为空提示
+  password-empty: "&c密码不能为空，请重试"
+  
+  # 通用提示
+  # 窗口关闭提示
+  close-window: "&c窗口已关闭，登录/注册终止"
+  
+  # 打开失败提示
+  failed: "打开失败"
+
+# 用户协议配置
 agreement:
-  -   "1. 用户行为规范:"
-  -   "禁止发布不当内容:"
-  -   服务器条款通常禁止发布色情、暴力、种族歧视、欺凌等不当内容，以及侵犯他人知识产权的内容.
-  -   "禁止作弊和恶意行为:"
-  -   服务器条款禁止使用任何作弊手段、利用漏洞、恶意破坏服务器等行为.
-  -   "禁止广告和商业行为:"
-  -   服务器条款通常禁止在服务器内进行广告宣传、未经授权的商业活动等.
-  -   "遵守游戏规则:"
-  -   玩家需要遵守《我的世界》官方的游戏规则和服务器的特定规则.
-  -   "2. 服务器运营商的责任:"
-  -   "提供安全稳定的服务器环境:"
-  -   服务器运营商需要保证服务器的正常运行，并采取措施防止作弊、恶意攻击等行为.
-  -   "保护用户隐私:"
-  -  服务器运营商需要保护玩家的个人信息，不得泄露给未经授权的第三方.
-  -   "公平公正地处理违规行为:"
-  -   服务器运营商需要对违规行为进行调查和处理，确保服务器环境的公平和健康.
-  -   "3. 法律责任:"
-  -   "侵权责任:"
-  -   玩家发布的内容如果侵犯了他人的知识产权或其他权益，需要承担相应的法律责任.
-  -   "违约责任:"
-  -   玩家违反服务器条款，可能会被服务器运营商采取封禁账号、移除物品等措施，并可能承担相应的违约责任.
-  -   "其他法律责任:"
-  -   根据具体情况，玩家还可能需要承担其他法律责任，例如诽谤、侵犯名誉等.
-  -   "4. 其他重要条款:"
+  - "1. 用户行为规范:"
+  - "禁止发布不当内容:"
+  - "服务器条款通常禁止发布色情、暴力、种族歧视、欺凌等不当内容，以及侵犯他人知识产权的内容."
+  - "禁止作弊和恶意行为:"
+  - "服务器条款禁止使用任何作弊手段、利用漏洞、恶意破坏服务器等行为."
+  - "禁止广告和商业行为:"
+  - "服务器条款通常禁止在服务器内进行广告宣传、未经授权的商业活动等."
+  - "遵守游戏规则:"
+  - "玩家需要遵守《我的世界》官方的游戏规则和服务器的特定规则."
+  - "2. 服务器运营商的责任:"
+  - "提供安全稳定的服务器环境:"
+  - "服务器运营商需要保证服务器的正常运行，并采取措施防止作弊、恶意攻击等行为."
+  - "保护用户隐私:"
+  - "服务器运营商需要保护玩家的个人信息，不得泄露给未经授权的第三方."
+  - "公平公正地处理违规行为:"
+  - "服务器运营商需要对违规行为进行调查和处理，确保服务器环境的公平和健康."
+  - "3. 法律责任:"
+  - "侵权责任:"
+  - "玩家发布的内容如果侵犯了他人的知识产权或其他权益，需要承担相应的法律责任."
+  - "违约责任:"
+  - "玩家违反服务器条款，可能会被服务器运营商采取封禁账号、移除物品等措施，并可能承担相应的违约责任."
+  - "其他法律责任:"
+  - "根据具体情况，玩家还可能需要承担其他法律责任，例如诽谤、侵犯名誉等."
+  - "4. 其他重要条款:"

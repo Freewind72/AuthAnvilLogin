@@ -3,9 +3,9 @@
 
 [versions]
 fr-xephi-authme = "5.6.1-SNAPSHOT"
-io-papermc-paper-paper-api = "1.21.1-R0.1-SNAPSHOT"
+io-papermc-paper-paper-api = "1.21.11-R0.1-SNAPSHOT"
 me-clip-placeholderapi = "2.11.6"
-net-wesjd-anvilgui = "1.10.10-SNAPSHOT"
+net-wesjd-anvilgui = "1.10.11-SNAPSHOT"
 org-geysermc-floodgate-api = "2.2.4-SNAPSHOT"
 org-geysermc-geyser-api = "2.7.0-SNAPSHOT"
 

@@ -2,6 +2,7 @@ package net.chen.ll.authAnvilLogin.util;
 
 import net.chen.ll.authAnvilLogin.core.Config;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
@@ -23,7 +24,9 @@ public class ItemName {
         ItemStack itemStack = baseItem.clone();
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
-            itemMeta.displayName(Component.text(name));
+            // 使用 LegacyComponentSerializer 处理颜色代码
+            Component displayName = LegacyComponentSerializer.legacySection().deserialize(name);
+            itemMeta.displayName(displayName);
             itemStack.setItemMeta(itemMeta);
         }
         return itemStack;
@@ -33,7 +36,9 @@ public class ItemName {
         if(itemStack==null||lore == null) throw new NullPointerException("lore can not be null");
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
-            itemMeta.lore(List.of(Component.text(lore)));
+            // 使用 LegacyComponentSerializer 处理颜色代码
+            Component loreComponent = LegacyComponentSerializer.legacySection().deserialize(lore);
+            itemMeta.lore(List.of(loreComponent));
             itemStack.setItemMeta(itemMeta);
         }
         return itemStack;

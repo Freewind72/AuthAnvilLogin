@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: net.chen.ll.authAnvilLogin.AuthAnvilLogin
+paperweight-mappings-namespace: spigot
+
